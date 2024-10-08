@@ -39,6 +39,11 @@ def train_model(dataset, model_name="Salesforce/codegen-350M-multi"):
     model = AutoModelForCausalLM.from_pretrained(model_name)
     tokenizer = AutoTokenizer.from_pretrained(model_name)
 
+    # Assign the eos_token as pad_token if pad_token is not present
+    if tokenizer.pad_token is None:
+        tokenizer.add_special_tokens({'pad_token': tokenizer.eos_token})
+        model.resize_token_embeddings(len(tokenizer))  # Update model embedding size for new token
+
     # Data collator for dynamic padding
     data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=False)
 
@@ -75,14 +80,20 @@ def main():
     texts = extract_text_from_html(html_folder)
     print(f"Extracted {len(texts)} documents.")
 
-    # Step 2: Load tokenizer and tokenize texts
+    # Step 2: Load tokenizer and assign pad_token as eos_token if not present
     tokenizer = AutoTokenizer.from_pretrained("Salesforce/codegen-350M-multi")
+
+    # Check if the tokenizer has a padding token, if not, assign eos_token as padding token
+    if tokenizer.pad_token is None:
+        tokenizer.add_special_tokens({'pad_token': tokenizer.eos_token})
+
+    # Step 3: Tokenize texts
     tokenized_texts = tokenize_texts(texts, tokenizer)
 
-    # Step 3: Create dataset
+    # Step 4: Create dataset
     dataset = create_dataset(tokenized_texts)
 
-    # Step 4: Train the model
+    # Step 5: Train the model
     train_model(dataset)
 
 if __name__ == "__main__":
