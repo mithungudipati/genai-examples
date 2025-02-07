@@ -1,0 +1,15 @@
+
+
+graph TB
+    subgraph K8s_Cluster
+        ro[Rollout Operator]
+        db[(MongoDB)]
+    end
+
+    rs[RolloutStrategy] --> ro
+    rc[rolloutComponent] --> ro
+    ro --> db
+    ro -- "Generate/update" --> iv[Multiple image_version files]
+
+    classDef k8s fill:#326ce5,stroke:#fff,stroke-width:2px;
+    class K8s_Cluster k8s;
