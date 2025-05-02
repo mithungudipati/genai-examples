@@ -21,7 +21,7 @@ def clean_filename(filename):
 def scrape_yaml_examples(url):
     try:
         # Send HTTP GET request
-        response = requests.get(url)
+        response1 = requests.get(url)
         response.raise_for_status()
         
         # Parse HTML content
