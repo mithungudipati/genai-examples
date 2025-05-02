@@ -21,7 +21,7 @@ def clean_filename(filename):
 def scrape_yaml_examples(url):
     try:
         # Send HTTP GET request
-        response = requests.get(url)
+        response1 = requests.get(url)
         response.raise_for_status()
         
         # Parse HTML content
@@ -31,7 +31,7 @@ def scrape_yaml_examples(url):
         yaml_examples = soup.find_all("pre", {"class": "language-yaml"})
         
         if yaml_examples:
-            print(f"Found {len(yaml_examples)} YAML examples on {url}")
+            print(f"Found and {len(yaml_examples)} YAML examples on {url}")
             
             # Extract YAML examples and save them to files
             for idx, example in enumerate(yaml_examples):
